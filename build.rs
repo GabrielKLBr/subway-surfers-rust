@@ -1,3 +1,4 @@
+extern crate winres;
 use std::path::{Path, PathBuf};
 use std::fs;
 
@@ -20,6 +21,14 @@ fn copy_dir_all(src: &Path, dst: &Path) -> std::io::Result<()> {
     Ok(())
 }
 
+fn add_executable_icon() {
+    if cfg!(target_os = "windows") {
+        let mut res = winres::WindowsResource::new();
+        res.set_icon("favicon.ico"); // caminho para o ícone
+        res.compile().unwrap();
+    }
+}
+
 fn main() {
     let assets = Path::new("assets");
     let out_dir = std::env::var("OUT_DIR").unwrap();
@@ -32,6 +41,8 @@ fn main() {
     fs::create_dir_all(&dest).unwrap();
     copy_dir_all(assets, &dest).unwrap();
     println!("cargo:rerun-if-changed=assets");
+
+    add_executable_icon();
 
     let cpp_file = Path::new("native/webview.cpp");
     let obj_file = Path::new("native/webview.obj");
@@ -58,11 +69,11 @@ fn main() {
 
     // Garante rebuild se o .cpp mudar
     println!("cargo:rerun-if-changed=native/webview.cpp");
-    println!("cargo:rustc-link-lib=advapi32");
-    println!("cargo:rustc-link-lib=ole32");
-    println!("cargo:rustc-link-lib=shlwapi");
-    println!("cargo:rustc-link-lib=shell32");
-    println!("cargo:rustc-link-lib=version");
-    println!("cargo:rustc-link-lib=dwmapi");
-    println!("cargo:rustc-link-lib=user32");
+    println!("cargo:rustc-link-lib=static=advapi32");
+    println!("cargo:rustc-link-lib=static=ole32");
+    println!("cargo:rustc-link-lib=static=shlwapi");
+    println!("cargo:rustc-link-lib=static=shell32");
+    println!("cargo:rustc-link-lib=static=version");
+    println!("cargo:rustc-link-lib=static=dwmapi");
+    println!("cargo:rustc-link-lib=static=user32");
 }

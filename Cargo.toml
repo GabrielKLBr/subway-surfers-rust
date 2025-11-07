@@ -3,12 +3,18 @@ name = "subway-surfers-rust"
 version = "1.0.0"
 authors = ["gabrielklbr"]
 
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
 [[bin]]
-name = "main"
+name = "SubwaySurfersRust"
+icon = "assets/favicon.ico"
 path = "src/main.rs"
 
 [build-dependencies]
+winres = "0.1.12"
 cc = "1.2.44"
 
 [dependencies]
 tiny_http = "0.12.0"
+winres = "0.1.12"
