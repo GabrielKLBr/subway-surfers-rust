@@ -15,3 +15,12 @@ But I was trying to use only Edge WebView2, since it's already installed by defa
 And I am too dumb to know how to use the most popular Edge WebView's crates.
 
 And thanks to this C++ lib (which you also need to download):  [Tiny cross-platform webview library for C/C++](https://github.com/webview/webview) it saved me a lot.
+
+# Changelog
+## Version 1.0.0
+* Includes all the things on the text above, pretty much nothing to say
+## Version 1.0.1
+* Added an icon to the exe file
+## Version 1.0.2
+* The icon now appears on the window
+* ```build.rs``` detects if you are building on ```debug``` mode or ```release``` mode and switches between ```console``` subsystem and ```windows``` subsystem

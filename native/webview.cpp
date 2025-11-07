@@ -1,8 +1,11 @@
 #include "webview/webview.h"
+
 #include <windows.h>
 #include <iostream>
 #include <thread>
 #include <string>
+
+#define IDI_APP_ICON 6969
 
 static WNDPROC g_orig_wndproc = nullptr;
 static bool g_is_fullscreen = false;
@@ -84,6 +87,13 @@ extern "C" __declspec(dllexport) void run_webview()
 
     HWND hwnd = (HWND)webView.window().value();
 
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    HICON hIcon = (HICON)LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+    if(hIcon) {
+        SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+        SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+    }
+
     // Substitui WndProc (subclass)
     g_orig_wndproc = (WNDPROC)SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)hook_wndproc);
     if (!g_orig_wndproc) {
@@ -94,6 +104,7 @@ extern "C" __declspec(dllexport) void run_webview()
     webView.set_size(1213, 720, WEBVIEW_HINT_NONE);
     webView.navigate("http://localhost:6967");
     webView.run();
+    SetForegroundWindow(hwnd);
 
     if (g_orig_wndproc) {
         SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)g_orig_wndproc);
